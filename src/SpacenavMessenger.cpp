@@ -43,7 +43,9 @@ void SpacenavMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         if(newValue == "current")
         {
             G4cout << "using current viewer..." << G4endl;
+            spacenav_->SetSensitivity(2000);
             spacenav_->SetViewer(visman_->GetCurrentViewer());
+            std::cout << "viewer for spacenav is set" << std::endl;
         }
         
         

@@ -56,21 +56,28 @@ void G4Spacenav::RotateTranslate(const G4Vector3D& rot, G4double zoom, const std
 {
     //NOTE: making a copy here, seems the only way
     auto viewparams = viewer_->GetViewParameters();
+    std::cout << viewparams.GetViewpointDirection() << std::endl;
     viewparams.SetViewpointDirection(viewparams.GetViewpointDirection() + rot);
-    viewparams.IncrementPan(pan.first, pan.second);
-    viewparams.SetZoomFactor(viewparams.GetZoomFactor() + zoom);
+//     viewparams.IncrementPan(pan.first, pan.second);
+//     viewparams.SetZoomFactor(viewparams.GetZoomFactor() + zoom);
     viewer_->SetViewParameters(viewparams);
+    viewer_->DrawView();
 }
 
 void G4Spacenav::RunThread()
 {
     auto threadfun = [this] () { 
         int i= 0; 
+        while(!stopthread_)
+        {
             auto vals = GetMoveEventValues(this->nav_->wait());
             std::cout << "got spnav event! " << i++ << std::endl;
             auto incvals = ConvertMoveValues(vals);
             this->RotateTranslate(std::get<0>(incvals), std::get<1>(incvals), std::get<2>(incvals));
             std::cout << "rotated..." << std::endl;
+            std::this_thread::yield();
+        }
+        
     };
     
     if(runthread_ != nullptr)
@@ -82,6 +89,7 @@ void G4Spacenav::RunThread()
     
     stopthread_ = false;
     runthread_ = new std::thread(threadfun);
+
     
     std::cout << "thread started" << std::endl;
     runthread_->detach();
