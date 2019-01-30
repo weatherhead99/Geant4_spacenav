@@ -1,11 +1,6 @@
 #include <G4UIQt.hh>
 
 #include <iostream>
-#include "libspnavpp.hh"
-
-
-#include <X11/Xlib.h>
-#include <spnav.h>
 
 
 #include <G4VisExecutive.hh>
@@ -19,7 +14,7 @@
 #include <G4PVPlacement.hh>
 #include <FTFP_BERT.hh>
 
-#include "X11Messenger.hh"
+#include "SpacenavMessenger.hh"
 
 #include <type_traits>
 
@@ -50,7 +45,8 @@ int main(int argc, char** argv)
     runman->SetUserInitialization(new StupidDetector);
     runman->SetUserInitialization(new FTFP_BERT);
     
-    new X11Messenger;
+    new SpacenavMessenger;
+    
     
     auto uiman = G4UImanager::GetUIpointer();
 
@@ -59,7 +55,6 @@ int main(int argc, char** argv)
     uiman->ApplyCommand("/vis/drawVolume");
     uiman->ApplyCommand("/vis/scene/add/axes");
     
-    auto graphics_system = visman.GetCurrentGraphicsSystem();
     
     auto vwr = visman.GetCurrentViewer();
     if(!vwr)

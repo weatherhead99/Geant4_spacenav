@@ -13,8 +13,8 @@ find_package(libspnav REQUIRED)
 
 find_package(Qt4 REQUIRED)
 
-add_library(Geant4_spacenav src/libspnavpp.cpp
-src/G4X11Utils.cpp)
+add_library(Geant4_spacenav src/libspnavpp.cpp src/SpacenavMessenger.cpp
+src/G4X11Utils.cpp src/G4Spacenav.cpp)
 target_link_libraries(Geant4_spacenav PUBLIC libspnav::libspnav X11 ${Geant4_LIBRARIES} )
 target_include_directories(Geant4_spacenav PUBLIC include ${Geant4_INCLUDE_DIRS})
 
