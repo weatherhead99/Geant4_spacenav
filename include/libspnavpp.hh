@@ -2,17 +2,17 @@
 
 #include <X11/Xlib.h>
 #include <array>
+#include <spnav.h>
 
-class spnav_event;
+std::array<int,6> GetMoveEventValues(const spnav_event& sev);
 
 class spnav
 {
 public:
     spnav(Display* disp, Window win);
     ~spnav();
-    bool wait();
+    spnav_event wait();
     
-    std::array<double,6> GetMoveEventValues(const spnav_event& sev);
 private:
     
     int fd_;
