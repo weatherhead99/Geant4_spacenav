@@ -31,3 +31,15 @@ bool spnav::wait()
   return true;
   
 };
+
+std::array<double, 6> spnav::GetMoveEventValues(const spnav_event& sev)
+{
+    if(sev.type != SPNAV_EVENT_MOTION)
+    {
+        throw std::out_of_range("not a motion event!");
+    }
+    
+    return std::array<double,6> {sev.motion.x, sev.motion.y, sev.motion.z,
+        sev.motion.rx, sev.motion.ry, sev.motion.rz};
+    
+}

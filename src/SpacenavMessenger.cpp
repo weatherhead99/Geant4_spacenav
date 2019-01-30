@@ -1,12 +1,22 @@
 #include "SpacenavMessenger.hh"
+#include <G4VisManager.hh>
 #include "G4X11Utils.hh"
 #include <G4UImanager.hh>
 #include "libspnavpp.hh"
 #include "G4Spacenav.hh"
 
 SpacenavMessenger::SpacenavMessenger() 
-: init_{"/spacenav/init",this}
-{  
+: init_{"/spacenav/init",this},
+viewer_{"/spacenav/viewer", this}
+{
+    init_.SetGuidance("initialize spacenavigator support");
+    
+    viewer_.SetParameterName("scene_name",true);
+    viewer_.SetDefaultValue("current");
+    viewer_.SetGuidance("attach spacenavigator to a viewer");
+    
+    visman_ = G4VisManager::GetInstance();
+    
 }
 
 SpacenavMessenger::~SpacenavMessenger()
@@ -17,12 +27,29 @@ SpacenavMessenger::~SpacenavMessenger()
 
 
 
-void SpacenavMessenger::SetNewValue(G4UIcommand* command, G4String)
+void SpacenavMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
     if(*command == init_)
     {
       Initialise();  
-    };
+    }
+    else if(*command == viewer_)
+    {
+        if(!inited_)
+        {
+            G4cerr << "need to initialize first! Call /spacenav/init" << G4endl;
+        }
+        
+        if(newValue == "current")
+        {
+            G4cout << "using current viewer..." << G4endl;
+            spacenav_->SetViewer(visman_->GetCurrentViewer());
+        }
+        
+        
+    }
+    
+    
     
 }
 
