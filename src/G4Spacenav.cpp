@@ -64,6 +64,13 @@ void G4Spacenav::RotateTranslate(const G4Vector3D& rot, G4double zoom, const std
     viewer_->DrawView();
 }
 
+std::tuple<G4Vector3D, G4double, std::pair<G4double, G4double> > G4Spacenav::WaitSpacenavEvent()
+{
+    auto vals = GetMoveEventValues(this->nav_->wait());
+    return ConvertMoveValues(vals);
+}
+
+
 void G4Spacenav::RunThread()
 {
     auto threadfun = [this] () { 

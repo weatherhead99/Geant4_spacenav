@@ -19,6 +19,8 @@ public:
     double GetSensitivity() const;
     void RotateTranslate(const G4Vector3D& rot, G4double zoom, const std::pair<G4double,G4double>& pan);
     
+    std::tuple<G4Vector3D, G4double, std::pair<G4double,G4double>> WaitSpacenavEvent();
+    
     void RunThread();
     
     
