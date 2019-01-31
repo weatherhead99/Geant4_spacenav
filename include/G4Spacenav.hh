@@ -7,6 +7,7 @@
 class G4UImanager;
 class spnav;
 class G4VViewer;
+class SpacenavQtMessenger;
 
 class G4Spacenav
 {
@@ -30,4 +31,5 @@ private:
     double sens_ = 1.0;
     std::thread* runthread_ = nullptr;
     std::atomic<bool> stopthread_;
+    SpacenavQtMessenger* mess_;
 };

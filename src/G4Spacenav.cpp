@@ -6,6 +6,7 @@
 #include <G4VViewer.hh>
 #include <thread>
 #include <iostream>
+#include "SpacenavQtMessenger.hh"
 
 using std::thread;
 
@@ -25,6 +26,7 @@ G4Spacenav::G4Spacenav(G4UImanager* uiman)
 {
     auto dispwin = GetX11Info(uiman);
     nav_ = new spnav(std::get<0>(dispwin), std::get<1>(dispwin));
+    mess_ = new SpacenavQtMessenger(*this);
     
 }
 
@@ -33,6 +35,9 @@ G4Spacenav::~G4Spacenav()
 {
     if(nav_)
         delete nav_;
+    
+    if(mess_)
+        delete mess_;
     
 }
 
@@ -73,34 +78,7 @@ std::tuple<G4Vector3D, G4double, std::pair<G4double, G4double> > G4Spacenav::Wai
 
 void G4Spacenav::RunThread()
 {
-    auto threadfun = [this] () { 
-        int i= 0; 
-        while(!stopthread_)
-        {
-            auto vals = GetMoveEventValues(this->nav_->wait());
-            std::cout << "got spnav event! " << i++ << std::endl;
-            auto incvals = ConvertMoveValues(vals);
-            this->RotateTranslate(std::get<0>(incvals), std::get<1>(incvals), std::get<2>(incvals));
-            std::cout << "rotated..." << std::endl;
-            std::this_thread::yield();
-        }
-        
-    };
     
-    if(runthread_ != nullptr)
-    {
-        stopthread_ = true;
-        runthread_->join();
-        delete runthread_;
-    }
-    
-    stopthread_ = false;
-    runthread_ = new std::thread(threadfun);
-
-    
-    std::cout << "thread started" << std::endl;
-    runthread_->detach();
-    std::cout << "thread detached" << std::endl;
     
 }
 

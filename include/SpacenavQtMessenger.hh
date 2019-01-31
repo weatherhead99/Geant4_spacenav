@@ -11,8 +11,18 @@ Q_DECLARE_METATYPE(G4Vector3D)
 
 class SpacenavThreadWorker : public QThread
 {
+public:
+    SpacenavThreadWorker(G4Spacenav& g4spnav);
+    void run() override;  
+signals:
+    void SendMessage(const G4Vector3D& rot, 
+                     G4double zoom, const std::pair<G4double, G4double>& pan); 
+public slots:
+    void stop();
     
-    
+private:
+    G4Spacenav& g4spnav_;
+    bool stopthread_ = false;
 };
 
 
@@ -26,9 +36,8 @@ public:
     void RunThread();
  
 signals:
-    void SendMessage(const G4Vector3D& rot, 
-                     G4double zoom, const std::pair<G4double, G4double>& pan);
- 
+    void stopWorker();
+    
 public slots:
     void RotateTranslate(const G4Vector3D& rot, 
                          G4double zoom, const std::pair<G4double, G4double>& pan);
@@ -37,7 +46,7 @@ public slots:
 private:
     SpacenavQtMessenger(G4Spacenav& g4spnav);
     G4Spacenav& g4spnav_;
-    QThread workerthread_;
+    SpacenavThreadWorker* worker_;
     
     
 };
